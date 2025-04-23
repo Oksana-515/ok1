@@ -10,7 +10,7 @@ class Node:
     def insert(self, new_block):
         if self.block is None:
             self.block = new_block
-        elif new_block['value'] <= self.block['value']:
+        elif new_block.value <= self.block.value:
             if self.left is None:
                 self.left = Node(new_block)
             else:
@@ -23,8 +23,21 @@ class Node:
 
 
 class BinaryTree:
-    def __init__(self):
+    def __init__(self, chain):
         self.root = None
+        self.build_tree(chain)
+
+        properties = (self.is_full(self.root), *self.is_complete_perfect())
+        print(f"Is the tree full? {properties[0]}")
+        print(f"Is the tree complete? {properties[1]}")
+        print(f"Is the tree perfect? {properties[2]}")
+
+        print('In order traversal:')
+        self.in_order_traversal(self.root)
+        print("Preorder traversal:")
+        self.pre_order_traversal(self.root)
+        print("Postorder traversal:")
+        self.post_order_traversal(self.root)
 
     def insert(self, block):
         if self.root is None:
@@ -54,45 +67,41 @@ class BinaryTree:
             self.post_order_traversal(node.right)
             print(node.block)
 
-    def check_properties(self):
+    def is_complete_perfect(self):
         if not self.root:
-            return {"is_full": True, "is_complete": True, "is_perfect": True}
+            return True, True
 
         queue = deque([(self.root, 0)])
-        is_full = True
-        is_complete = True
-        found_gap = False
-        min_depth = float('inf')
+        
         max_depth = float('-inf')
+        missing_child_level = float('inf')
 
         while queue:
             node, level = queue.popleft()
 
-            if not node.left and not node.right:
-                min_depth = min(min_depth, level)
-                max_depth = max(max_depth, level)
-
             if node.left:
-                if found_gap:
-                    is_complete = False
                 queue.append((node.left, level + 1))
+                if level > missing_child_level:
+                    return False, False
             else:
-                found_gap = True
+                missing_child_level = min(level, missing_child_level)
+                max_depth = max(level, max_depth)
 
             if node.right:
-                if found_gap:
-                    is_complete = False
                 queue.append((node.right, level + 1))
+                if level > missing_child_level:
+                    return False, False
             else:
-                found_gap = True
+                missing_child_level = min(level, missing_child_level)
+                max_depth = max(level, max_depth)
 
-            if (node.left and not node.right) or (not node.left and node.right):
-                is_full = False
+        return True, missing_child_level == max_depth
+    
+    def is_full(self, node):
+        if node is None:
+            return True
 
-        is_perfect = is_full and is_complete and min_depth == max_depth
+        if (node.left is None) != (node.right is None):
+            return False
 
-        return {
-            "is_full": is_full,
-            "is_complete": is_complete,
-            "is_perfect": is_perfect
-        }
+        return self.is_full(node.left) and self.is_full(node.right)

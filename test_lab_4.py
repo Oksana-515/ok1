@@ -1,71 +1,42 @@
 import unittest
 from lab_4 import BinaryTree
+from dataclasses import dataclass
+
+@dataclass
+class Block:
+    value: int
 
 class TestBinaryTree(unittest.TestCase):
-    def test_empty_tree(self):
-        tree = BinaryTree()
-        properties = tree.check_properties()
-        self.assertTrue(properties["is_full"])
-        self.assertTrue(properties["is_complete"])
-        self.assertTrue(properties["is_perfect"])
-
-    def test_single_node_tree(self):
-        tree = BinaryTree()
-        tree.insert({"value": 10})
-        properties = tree.check_properties()
-        self.assertTrue(properties["is_full"])
-        self.assertTrue(properties["is_complete"])
-        self.assertTrue(properties["is_perfect"])
-
     def test_full_tree(self):
-        tree = BinaryTree()
-        tree.insert({"value": 10})
-        tree.insert({"value": 5})
-        tree.insert({"value": 15})
-        properties = tree.check_properties()
-        self.assertTrue(properties["is_full"])
-        self.assertTrue(properties["is_complete"])
-        self.assertTrue(properties["is_perfect"])
+        chain = [Block(10), Block(5), Block(15), Block(3), Block(7), Block(12), Block(18)]
+        tree = BinaryTree(chain)
+        self.assertTrue(tree.is_full(tree.root))
 
-    def test_complete_but_not_full_tree(self):
-        tree = BinaryTree()
-        tree.insert({"value": 10})
-        tree.insert({"value": 5})
-        tree.insert({"value": 15})
-        tree.insert({"value": 3})
-        properties = tree.check_properties()
-        self.assertFalse(properties["is_full"])
-        self.assertTrue(properties["is_complete"])
-        self.assertFalse(properties["is_perfect"])
+    def test_not_full_tree(self):
+        chain = [Block(10), Block(5), Block(15), Block(3), Block(7), Block(12)]
+        tree = BinaryTree(chain)
+        self.assertFalse(tree.is_full(tree.root))
 
-    def test_perfect_tree(self):
-        tree = BinaryTree()
-        tree.insert({"value": 10})
-        tree.insert({"value": 5})
-        tree.insert({"value": 15})
-        tree.insert({"value": 3})
-        tree.insert({"value": 7})
-        tree.insert({"value": 13})
-        tree.insert({"value": 17})
-        properties = tree.check_properties()
-        self.assertTrue(properties["is_full"])
-        self.assertTrue(properties["is_complete"])
-        self.assertTrue(properties["is_perfect"])
+    def test_complete_and_perfect_tree(self):
+        chain = [Block(10), Block(5), Block(15), Block(3), Block(7), Block(12), Block(18)]
+        tree = BinaryTree(chain)
+        is_complete, is_perfect = tree.is_complete_perfect()
+        self.assertTrue(is_complete)
+        self.assertTrue(is_perfect)
 
-    def test_incomplete_tree(self):
-        tree = BinaryTree()
-        tree.insert({"value": 10})
-        tree.insert({"value": 5})
-        tree.insert({"value": 15})
-        tree.insert({"value": 3})
-        tree.insert({"value": 7})
-        tree.insert({"value": 1})
-        tree.insert({"value": 4})
-        properties = tree.check_properties()
-        self.assertTrue(properties["is_full"])
-        self.assertFalse(properties["is_complete"])
-        self.assertFalse(properties["is_perfect"])
+    def test_complete_but_not_perfect_tree(self):
+        chain = [Block(10), Block(5), Block(15), Block(3), Block(7), Block(12)]
+        tree = BinaryTree(chain)
+        is_complete, is_perfect = tree.is_complete_perfect()
+        self.assertTrue(is_complete)
+        self.assertFalse(is_perfect)
 
+    def test_not_complete_and_not_perfect_tree(self):
+        chain = [Block(10), Block(5), Block(7)]
+        tree = BinaryTree(chain)
+        is_complete, is_perfect = tree.is_complete_perfect()
+        self.assertFalse(is_complete)
+        self.assertFalse(is_perfect)
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()
