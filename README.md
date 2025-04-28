@@ -69,3 +69,7 @@ flowchart TD
     L3 --> L32[task2.py]
     L3 --> L33[task3.py]
     L3 --> L34[task4.py]
+    L31 --> L31t[test_task1.py]
+    L32 --> L32t[test_task2.py]
+    L33 --> L33t[test_task3.py]
+    L34 --> L34t[test_task4.py]
