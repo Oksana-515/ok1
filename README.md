@@ -66,6 +66,6 @@ flowchart TD
     B1[lab1-edit] --> L1
     B --> L3[📁 lab3]
     L3 --> L31[task1.py]
-    L3 --> L31[task2.py]
-    L3 --> L31[task3.py]
-    L3 --> L31[task4.py]
+    L3 --> L32[task2.py]
+    L3 --> L33[task3.py]
+    L3 --> L34[task4.py]
