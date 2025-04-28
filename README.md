@@ -61,9 +61,7 @@ task4.py - Конвертація дат
 ```mermaid
 flowchart TD
     A[Репозиторій] --> B[Гілка main]
-    B --> T[text.txt]
-    B --> L1[📁 lab1]
-    L1 --> L1PY[lab1.py]
+    B --> L1[lab_1]
     L1 --> T1PY[test_laba1.py]
     B1[lab1-edit] --> L1
     B --> L3[📁 lab3]
